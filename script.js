@@ -71,6 +71,27 @@ const galleries = {
   ],
 };
 
+// ===== PRELOAD ALL IMAGES =====
+const imageCache = new Map();
+
+function preloadGallery(project) {
+  const images = galleries[project];
+  if (!images) return;
+
+  images.forEach(src => {
+    if (imageCache.has(src)) return;
+
+    const img = new Image();
+    img.src = src;
+    imageCache.set(src, img);
+  });
+}
+
+// preload everything after load
+window.addEventListener('load', () => {
+  Object.keys(galleries).forEach(preloadGallery);
+});
+
 let currentIndex = 0;
 let currentProject = null;
 
@@ -84,9 +105,13 @@ function updateGallery(project) {
 
   const img = activeContent.querySelector('.gallery-image');
 
-  currentIndex = 0;
   currentProject = project;
-  img.src = images[currentIndex];
+
+  // если уже была картинка — не сбрасываем
+  if (!img.src || img.src === window.location.href) {
+    currentIndex = 0;
+    img.src = images[currentIndex];
+  }
 }
 
 // ===== ELEMENTS =====

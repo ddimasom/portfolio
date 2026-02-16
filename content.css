@@ -612,3 +612,11 @@ grid-column: 10 / span 2;
     height: auto;
   }
 }
+
+.gallery-image {
+  background: #f5f5f5;
+}
+
+img {
+  image-rendering: auto;
+}
