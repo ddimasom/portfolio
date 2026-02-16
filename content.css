@@ -450,12 +450,41 @@ grid-column: 10 / span 2;
 /* =========================
    📱 MOBILE VERSION
 ========================= */
-@media (min-width: 400px) and (max-width: 768px) {
+@media (min-width: 350px) and (max-width: 768px) {
+
+  @media (max-width: 768px) {
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  .grid, .page, .preview, .gallery {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .gallery-image, .preview img, .floating-image img, .floating-image2 img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .project-text,
+  .project-meta,
+  .project-content p {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+}
 
   /* GRID → колонка */
   .grid {
     display: block;
-    padding: 16px;
   }
 
   .page {
