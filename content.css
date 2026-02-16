@@ -216,13 +216,6 @@ display: inline-block; /* важно для правильной ширины */
   object-fit: cover;
 }
 
-video.gallery-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
 .gallery-arrow {
   position: absolute;
   top: 50%;
