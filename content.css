@@ -450,7 +450,7 @@ grid-column: 10 / span 2;
 /* =========================
    📱 MOBILE VERSION
 ========================= */
-@media (max-width: 768px) {
+@media (min-width: 400px) and (max-width: 768px) {
 
   /* GRID → колонка */
   .grid {
