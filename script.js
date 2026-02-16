@@ -189,53 +189,43 @@ projects.forEach(project => {
   });
 });
 
-// ===== HOVER PREVIEW =====
+// ===== HOVER PREVIEW FIX =====
 if (preview && previewImg) {
   projects.forEach(project => {
     const imgSrc = project.dataset.preview;
-    
-    if (!imgSrc) {
-      console.warn(`Project "${project.textContent}" has no data-preview attribute`);
-      return;
-    }
-    
-    // Предзагрузка изображений для плавного отображения
-    const img = new Image();
-    img.src = imgSrc;
-    
+    if (!imgSrc) return;
+
     project.addEventListener('mouseenter', () => {
-      previewImg.src = imgSrc;
+      // если есть в кеше — используем
+      if (imageCache && imageCache.has(imgSrc)) {
+        previewImg.src = imageCache.get(imgSrc).src;
+      } else {
+        previewImg.src = imgSrc;
+      }
+
       preview.style.opacity = '1';
       preview.style.transform = 'scale(1)';
     });
-    
+
     project.addEventListener('mousemove', (e) => {
-      // Отступ от курсора
-      const offsetX = 20;
-      const offsetY = 20;
-      
-      // Позиционирование preview
-      let left = e.clientX + offsetX;
-      let top = e.clientY + offsetY;
-      
-      // Проверка, чтобы preview не выходил за границы окна
-      const previewWidth = preview.offsetWidth;
-      const previewHeight = preview.offsetHeight;
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-      
-      if (left + previewWidth > windowWidth) {
-        left = e.clientX - previewWidth - offsetX;
+      const offset = 20;
+
+      let left = e.clientX + offset;
+      let top = e.clientY + offset;
+
+      const rect = preview.getBoundingClientRect();
+
+      if (left + rect.width > window.innerWidth) {
+        left = e.clientX - rect.width - offset;
       }
-      
-      if (top + previewHeight > windowHeight) {
-        top = e.clientY - previewHeight - offsetY;
+      if (top + rect.height > window.innerHeight) {
+        top = e.clientY - rect.height - offset;
       }
-      
-      preview.style.left = `${left}px`;
-      preview.style.top = `${top}px`;
+
+      preview.style.left = left + 'px';
+      preview.style.top = top + 'px';
     });
-    
+
     project.addEventListener('mouseleave', () => {
       preview.style.opacity = '0';
       preview.style.transform = 'scale(0.98)';
@@ -282,5 +272,12 @@ document.addEventListener('click', (e) => {
     `.project-content.active .gallery-image`
   );
 
-  activeImg.src = images[currentIndex];
+  const nextSrc = images[currentIndex];
+
+  // мгновенная загрузка из кеша
+  if (imageCache && imageCache.has(nextSrc)) {
+    activeImg.src = imageCache.get(nextSrc).src;
+  } else {
+    activeImg.src = nextSrc;
+  }
 });
