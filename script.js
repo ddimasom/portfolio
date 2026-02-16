@@ -2,8 +2,8 @@ console.log('script loaded');
 
 const galleries = {
   echo: [
-    'img/echo-1.gif',
-    'img/echo-2.gif',
+    'img/echo-1.webm',
+    'img/echo-2.webm',
     'img/echo-3.png'
   ],
   pet: [
@@ -12,11 +12,11 @@ const galleries = {
     'img/pet-3.png'
   ],
   superpowers: [
-    'img/super-1.gif',
-    'img/super-2.gif'
+    'img/super-1.webm',
+    'img/super-2.webm'
   ],
   branding: [
-    'img/zvuk1.gif',
+    'img/zvuk1.webm',
     'img/zvuk6.png',
     'img/zvuk2.png',
     'img/zvuk3.png',
@@ -74,6 +74,47 @@ const galleries = {
 let currentIndex = 0;
 let currentProject = null;
 
+function loadMediaFile(gallery, filePath) {
+  // Проверяем расширение файла
+  const isWebM = filePath.endsWith('.webm');
+  
+  // Ищем существующий элемент
+  const existingElement = gallery.querySelector('.gallery-image');
+  
+  if (isWebM) {
+    // Если нужно видео, но есть img - заменяем его
+    if (existingElement && existingElement.tagName === 'IMG') {
+      const video = document.createElement('video');
+      video.className = 'gallery-image';
+      video.controls = false;
+      video.autoplay = true;
+      video.muted = true;
+      video.loop = true;
+      video.loading = 'lazy';
+      existingElement.replaceWith(video);
+      video.src = filePath;
+      video.play();
+    } else if (existingElement && existingElement.tagName === 'VIDEO') {
+      // Если уже видео, просто меняем источник
+      existingElement.src = filePath;
+      existingElement.play();
+    }
+  } else {
+    // Если нужно изображение, но есть видео - заменяем его
+    if (existingElement && existingElement.tagName === 'VIDEO') {
+      const img = document.createElement('img');
+      img.className = 'gallery-image';
+      img.loading = 'lazy';
+      img.alt = '';
+      existingElement.replaceWith(img);
+      img.src = filePath;
+    } else if (existingElement && existingElement.tagName === 'IMG') {
+      // Если уже img, просто меняем источник
+      existingElement.src = filePath;
+    }
+  }
+}
+
 function updateGallery(project) {
   const images = galleries[project];
   if (!images) return;
@@ -82,11 +123,14 @@ function updateGallery(project) {
     `.project-content[data-project="${project}"]`
   );
 
-  const img = activeContent.querySelector('.gallery-image');
+  if (!activeContent) return;
 
+  const gallery = activeContent.querySelector('.gallery');
+  if (!gallery) return;
+  
   currentIndex = 0;
   currentProject = project;
-  img.src = images[currentIndex];
+  loadMediaFile(gallery, images[currentIndex]);
 }
 
 // ===== ELEMENTS =====
@@ -253,9 +297,12 @@ document.addEventListener('click', (e) => {
     ? (currentIndex + 1) % images.length
     : (currentIndex - 1 + images.length) % images.length;
 
-  const activeImg = document.querySelector(
-    `.project-content.active .gallery-image`
+  const activeContent = document.querySelector(
+    `.project-content.active`
   );
-
-  activeImg.src = images[currentIndex];
+  
+  if (!activeContent) return;
+  
+  const gallery = activeContent.querySelector('.gallery');
+  loadMediaFile(gallery, images[currentIndex]);
 });
