@@ -32,7 +32,7 @@ const galleries = {
     'img/eda2.png',
     'img/eda4.jpg',
     'img/eda5.png',
-    'img/eda3.jpg',
+    'img/eda3.png',
     'img/eda8.gif',
   ],
     zine: [
