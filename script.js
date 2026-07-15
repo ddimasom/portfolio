@@ -25,6 +25,16 @@ const galleries = {
     'img/zvuk7.png',
     'img/zvuk8.png'
   ],
+  tema: [
+    'img/eda.gif',
+    'img/eda6.jpeg',
+    'img/eda1.png',
+    'img/eda2.png',
+    'img/eda4.jpg',
+    'img/eda5.png',
+    'img/eda3.jpg',
+    'img/eda8.gif',
+  ],
     zine: [
     'img/electronica/1.1.png',
     'img/electronica/1.png',
